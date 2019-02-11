@@ -1,4 +1,5 @@
 <%
+  # Checks to see if path exists
   def dig(*path)
     path.inject(self) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
@@ -19,28 +20,66 @@
   </head>
 
   <body>
-    <div class="container"> <!-- begin container -->
+    <% if @error %>
+      <div class="alert">
+        It looks like we had a problem processing your request.
+        Please try again in a few seconds.
+      </div>
+    <% end %>
 
+    <div class="row form-section">
       <form method="GET" action="/index">
-        <p>Search Books: <input type="text" name="q"></p>
+        <h3>Search Books</h3>
+        <input type="text" name="q">
+        <input type="hidden" name="startIndex" value="0">
         <input class="button-primary" type="submit">
       </form>
+    </div>
 
+    <!-- begin container -->
+    <div class="container">
       <% if @books %>
-        <ul>
-          <% @books.each do |book| %>
-            <li><%= book['volumeInfo']['authors'].join %></li>
-            <li><%= book['volumeInfo']['title'] %></li>
-            <li><%= book['volumeInfo']['publisher'] %></li>
-            <% if book.dig('volumeInfo', 'imageLinks', 'thumbnail') %>
-                <img src=<%= book['volumeInfo']['imageLinks']['thumbnail'] %>></img>
-            <% else %>
-                <img class='book-img' src='/no-image.png'></img>
-            <% end %>
-          <% end %>
-        </ul>
-      <% end %>
+        <% @books.each do |book| %>
+          <% bookInfo = book['volumeInfo'] %>
+          <!-- book row start -->
+          <div class="row book-section">
+            <div class="one-third column">
+              <div class="row">
+                <img class='book-img' src=<%= bookInfo.dig('imageLinks', 'thumbnail') ? bookInfo['imageLinks']['thumbnail'] : '/no-image.png' %>></img>
+              </div>
+              <div class="row">
+                <% if bookInfo['infoLink']%><a href=<%= bookInfo['infoLink'] %>>More Info</a><% end %>
+              </div>
+            </div>
+            <div class="two-thirds column">
+              <label>Author</label>
+              <p><%= bookInfo['authors'] ? bookInfo['authors'].join(', ') : 'N/A' %></p>
 
-    </div> <!-- end container -->
+              <label>Title</label>
+              <p><%= bookInfo['title'] ? bookInfo['title'] : 'N/A' %></p>
+
+              <label>Publisher</label>
+              <p><%= bookInfo['publisher'] ? bookInfo['publisher'] : 'N/A' %></p>
+            </div>
+          </div>
+          <!-- book row end -->
+          <hr>
+        <% end %>
+        <div class="pagination-buttons">
+          <% if @curr_page > 0 %>
+            <a class="button" href=<%= @prev_url %>>Previous</a>
+          <% end %>
+
+          <% if @curr_page < @max_page %>
+            <a class="button" href=<%= @next_url %>>Next</a>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="row book-section">
+          <h5>We're sorry, couldn't find any results.</h5>
+        </div>
+      <% end %>
+    </div>
+    <!-- end container -->
   </body>
 </html>

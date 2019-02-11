@@ -1,3 +1,23 @@
+.alert {
+  padding: 10px;
+  background-color: #f44336;
+  color: white;
+  text-align: center;
+}
+
 .book-img {
   width: 128px;
+}
+
+.book-section {
+  margin: 2em 0;
+}
+
+.form-section {
+  padding: 2em;
+  background-color: lightgrey;
+}
+
+.pagination-buttons {
+  text-align: center;
 }
