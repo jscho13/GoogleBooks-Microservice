@@ -66,11 +66,11 @@
           <hr>
         <% end %>
         <div class="pagination-buttons">
-          <% if @curr_page > 0 %>
+          <% if @curr_idx > 0 %>
             <a class="button" href=<%= @prev_url %>>Previous</a>
           <% end %>
 
-          <% if @curr_page < @max_page %>
+          <% if @curr_idx < @max_page %>
             <a class="button" href=<%= @next_url %>>Next</a>
           <% end %>
         </div>
