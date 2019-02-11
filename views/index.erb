@@ -1,9 +1,46 @@
-<!doctype html>
+<%
+  def dig(*path)
+    path.inject(self) do |location, key|
+      location.respond_to?(:keys) ? location[key] : nil
+    end
+  end
+%>
+
+<!DOCTYPE HTML>
 <html>
   <head>
     <!-- Style and javascript links -->
+    <link rel="stylesheet" type="text/css" href="/styles/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/skeleton.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/custom.css" />
+
+    <!-- Mobile specific tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
+
   <body>
-    Hello
+    <div class="container"> <!-- begin container -->
+
+      <form method="GET" action="/index">
+        <p>Search Books: <input type="text" name="q"></p>
+        <input class="button-primary" type="submit">
+      </form>
+
+      <% if @books %>
+        <ul>
+          <% @books.each do |book| %>
+            <li><%= book['volumeInfo']['authors'].join %></li>
+            <li><%= book['volumeInfo']['title'] %></li>
+            <li><%= book['volumeInfo']['publisher'] %></li>
+            <% if book.dig('volumeInfo', 'imageLinks', 'thumbnail') %>
+                <img src=<%= book['volumeInfo']['imageLinks']['thumbnail'] %>></img>
+            <% else %>
+                <img class='book-img' src='/no-image.png'></img>
+            <% end %>
+          <% end %>
+        </ul>
+      <% end %>
+
+    </div> <!-- end container -->
   </body>
 </html>
