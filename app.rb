@@ -12,7 +12,8 @@ get '/index' do
   uri = URI.parse('https://www.googleapis.com/books/v1/volumes')
   @curr_idx = params['startIndex'].to_i
   @query = params['q']
-  q_params = { q: @query, startIndex: @curr_idx }
+  @key = 'AIzaSyB4dnWKZafl6wa88vvZGss2r-p_LjrV_0k'
+  q_params = { q: @query, startIndex: @curr_idx, key: @key }
   uri.query = URI.encode_www_form( q_params )
 
   # Handle response
@@ -25,8 +26,8 @@ get '/index' do
     # @max_page = total_items/10-1
     # @max_page += 1 if total_items%10 > 0
 
-    p_str = "/index?q=#{@query}&startIndex=#{@curr_idx-1}"
-    n_str = "/index?q=#{@query}&startIndex=#{@curr_idx+1}"
+    p_str = "/index?q=#{@query}&startIndex=#{@curr_idx-1}&key#{@key}"
+    n_str = "/index?q=#{@query}&startIndex=#{@curr_idx+1}&key#{@key}"
     @prev_url = URI::encode(p_str)
     @next_url = URI::encode(n_str)
 
