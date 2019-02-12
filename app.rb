@@ -34,8 +34,8 @@ get '/index' do
       @max_page = total_items/10-1
       @max_page += 1 if total_items%10 > 0
 
-      p_str = "/index?q=#{@query}&startIndex=#{@curr_idx-1}"
-      n_str = "/index?q=#{@query}&startIndex=#{@curr_idx+1}"
+      p_str = "/index?q=#{@query}&startIndex=#{@curr_idx-10}"
+      n_str = "/index?q=#{@query}&startIndex=#{@curr_idx+10}"
 
       @prev_url = URI::encode(p_str)
       @next_url = URI::encode(n_str)
